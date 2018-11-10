@@ -7,7 +7,7 @@ module.exports = [
   // name of university
   {
     type: "text",
-    text: "次に大学名、学部、学年を教えてください\n例)○○大学/○○宿学部/○年"
+    text: "次に大学名、学部、学年を教えてください\n例)○○大学/○○学部/○年"
   },
   //date of graduation
   {
@@ -49,7 +49,7 @@ module.exports = [
   // phone
   {
     type: "text",
-    text: "次に電話番号を教えて下さい！\n"
+    text: "次に電話番号を教えて下さい！"
   },
   [
     // agreement file

@@ -36,6 +36,12 @@ const client = new line.Client(config);
 // about Express itself: https://expressjs.com/
 const app = express();
 
+app.get('/registrations', (req, res) => {
+  User.find().then(response => {
+    return res.json(response)
+  }).catch(error => res.json(error));
+});
+
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
 app.post('/webhook', line.middleware(config), (req, res) => {

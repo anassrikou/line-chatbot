@@ -41,7 +41,7 @@ const client = new line.Client(config);
 
 app.get('/registrations', (req, res) => {
   User.find().then(response => {
-    return res.render(event, { users: response });
+    return res.render('event', { users: response });
   }).catch(error => res.json(error));
 });
 

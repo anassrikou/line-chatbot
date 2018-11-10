@@ -2,10 +2,17 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
-const axios = require('axios');
 const mongoose = require('mongoose');
 
 const actions = require('./actions');
+
+// create Express app
+// about Express itself: https://expressjs.com/
+const app = express();
+
+// configure app
+app.set('view engine', 'ejs');
+
 
 let i = 0; // actions counter
 let registration_process_started = false;
@@ -32,13 +39,9 @@ const config = {
 // create LINE SDK client
 const client = new line.Client(config);
 
-// create Express app
-// about Express itself: https://expressjs.com/
-const app = express();
-
 app.get('/registrations', (req, res) => {
   User.find().then(response => {
-    return res.json(response)
+    return res.render(event, { users: response });
   }).catch(error => res.json(error));
 });
 

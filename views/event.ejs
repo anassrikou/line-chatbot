@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <table>
+    <tr>
+      <th>name</th>
+      <th>university</th>
+      <th>graduation_date</th>
+      <th>email</th>
+      <th>phone</th>
+      <th>attend_date</th>
+    </tr>
+    <tbody>
+      <% users.forEach(function(user){ %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.university %></td>
+        <td><%= user.graduation_date %></td>
+        <td><%= user.email %></td>
+        <td><%= user.attend_date %></td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</body>
+</html>

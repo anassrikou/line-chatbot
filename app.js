@@ -3,6 +3,7 @@
 const line = require('@line/bot-sdk');
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const actions = require('./actions');
 
@@ -27,7 +28,9 @@ const User = mongoose.model('User', {
   graduation_date: String, 
   email: String,
   phone: String,
-  attend_date: String
+  attend_date: String,
+  confirmed: { type: Boolean, default: false },
+  hidden: { type: Boolean, default: false }
 });
 
 // create LINE SDK config from env variables
@@ -44,6 +47,20 @@ app.get('/registrations', (req, res) => {
     return res.render('event', { users: response });
   }).catch(error => res.json(error));
 });
+
+app.post('/confirm/:id', (req, res) => {
+  const id = req.params.id;
+  User.findByIdAndUpdate(id, { $set:{ confirmed: true }}, { new: true })
+    .then(user => res.json(user))
+    .catch(error => res.json(error));
+});
+
+app.post('/hide/:id', (req, res) => {
+  const id = req.params.id;
+  User.findByIdAndUpdate(id, { $set:{ hidden: true }}, { new: true })
+    .then(user => res.json(user))
+    .catch(error => res.json(error));
+})
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc

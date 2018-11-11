@@ -6,29 +6,64 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Event registration</title>
   <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <style>
+    .confirmed {
+      background-color: #86c08e !important;
+    }
+  </style>
 </head>
 <body>
   <table border="1" class="table table-striped table-hover">
-    <tr>
-      <th>name</th>
-      <th>university</th>
-      <th>graduation_date</th>
-      <th>email</th>
-      <th>phone</th>
-      <th>attend_date</th>
-    </tr>
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>university</th>
+        <th>graduation_date</th>
+        <th>email</th>
+        <th>phone</th>
+        <th>attend_date</th>
+        <th>option</th>
+      </tr>
+    </thead>
     <tbody>
       <% users.forEach(function(user){ %>
-      <tr>
-        <td><%= user.name %></td>
-        <td><%= user.university %></td>
-        <td><%= user.graduation_date %></td>
-        <td><%= user.email %></td>
-        <td><%= user.phone %></td>
-        <td><%= user.attend_date %></td>
-      </tr>
+        <% if (!user.hidden) { %>
+          <tr <% if (user.confirmed) { %> class="confirmed" <% } %> >
+            <td><%= user.name %></td>
+            <td><%= user.university %></td>
+            <td><%= user.graduation_date %></td>
+            <td><%= user.email %></td>
+            <td><%= user.phone %></td>
+            <td><%= user.attend_date %></td>
+            <td><button id="confirm" data-id="<%= user._id %>" class="btn btn-success">confirm</button><button id="hide" data-id="<%= user._id %>" class="btn btn-error">hide</button></td>
+          </tr>
+        <% } %>
       <% }); %>
     </tbody>
   </table>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const confirm_button = document.querySelectorAll("#confirm");
+    const hide_button = document.querySelectorAll("#hide");
+
+    confirm_button.forEach(btn => btn.addEventListener('click', handleConfirmation));
+    hide_button.forEach(btn=> btn.addEventListener('click', handleHide));
+
+    function handleConfirmation(e) {
+      const tr = this.parentElement.parentElement;
+      const id = this.dataset.id;
+      axios.post(`/confirm/${id}`)
+        .then(response => tr.classList.add('confirmed'))
+        .catch(error => console.log(error));
+    }
+
+    function handleHide(e) {
+      const tr = this.parentElement.parentElement;
+      const id = this.dataset.id;
+      axios.post(`/hide/${id}`)
+        .then(response => tr.remove())
+        .catch(error => console.log(error));
+    }
+  </script>
 </body>
 </html>

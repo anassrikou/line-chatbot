@@ -22,10 +22,10 @@ const user = [];
 // mongoose db connection
 mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds157843.mlab.com:57843/event`);
 
-const User = mongoose.model('User', { 
+const User = mongoose.model('User', {
   name: String,
   university: String,
-  graduation_date: String, 
+  graduation_date: String,
   email: String,
   phone: String,
   attend_date: String,
@@ -50,14 +50,14 @@ app.get('/registrations', (req, res) => {
 
 app.post('/confirm/:id', (req, res) => {
   const id = req.params.id;
-  User.findByIdAndUpdate(id, { $set:{ confirmed: true }}, { new: true })
+  User.findByIdAndUpdate(id, { $set: { confirmed: true } }, { new: true })
     .then(user => res.json(user))
     .catch(error => res.json(error));
 });
 
 app.post('/hide/:id', (req, res) => {
   const id = req.params.id;
-  User.findByIdAndUpdate(id, { $set:{ hidden: true }}, { new: true })
+  User.findByIdAndUpdate(id, { $set: { hidden: true } }, { new: true })
     .then(user => res.json(user))
     .catch(error => res.json(error));
 })
@@ -77,55 +77,94 @@ app.post('/webhook', line.middleware(config), (req, res) => {
 
 // event handler
 function handleEvent(event) {
+
   console.log(event);
   if (event.type !== 'message' || event.message.type !== 'text') {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
   
+
   if (event.message.text.trim() === "エントリー")
     registration_process_started = true;
+  else
+    return client.replyMessage(event.replyToken, { "type": "text", "text": "「エントリー」と送信してください" });
 
-  // check if we asked all the questions
-  if (i === actions.length) {
-    // we get the last message here
-    user.push(event.message.text);
-   
-    const info = new User();
-    info.name = user[1];
-    info.university = user[2];
-    info.graduation_date = user[3];
-    info.email = user[4];
-    info.phone = user[5];
-    info.attend_date = user[7];
-    info.save().then(response => {
-      // reset everything
-      i = 0;
-      registration_process_started = false; // end registration
-      // user.length = 0;
-      return client.replyMessage(event.replyToken, { "type": "text", "text": "以上で終わりです！今後の流れは後ほど担当よりご連絡させていただきます。ご協力ありがとうございました。" });
-    })
-    .catch(error => {
-      return client.replyMessage(event.replyToken, {"type": "text", "text": "error saving"});
-    });
-   }
-
+  // registration process started
   if (registration_process_started) {
-    // increment the counter
-    if (event.message.text !== "register" || event.message.text !== "同意する") {
-      // add date to user table so we can send it later to database
+    // did we ask all the questions?
+    if (i === actions.length) {
       user.push(event.message.text);
+      console.log(user);
+
+      const info = new User();
+      info.name = user[1];
+      info.university = user[2];
+      info.graduation_date = user[3];
+      info.email = user[4];
+      info.phone = user[5];
+      info.attend_date = user[7];
+      info.save().then(response => {
+        client.pushMessage(event.source.userId, { "type": "text", "text": "以上で終わりです！今後の流れは後ほど担当よりご連絡させていただきます。ご協力ありがとうございました。" })
+          .then(() => {
+            console.log('done');
+            user.length = 0; // reset the user info array
+          })
+          .catch((err) => {
+            // error handling
+            console.log(err);
+          });
+        // reset everything
+        i = 0;
+        console.log(user);
+        registration_process_started = false; // end registration
+        // user.length = 0;
+      })
+        .catch(error => {
+          console.log(error);
+        });
+
+      return;
     }
 
-    const reply = actions[i];
+    const message = actions[i];
 
-    console.log(i, actions.length, user);
-    i++;
-    return client.replyMessage(event.replyToken, reply);
+    client.pushMessage(event.source.userId, message)
+      .then(() => {
+        user.push(event.message.text);
+        i++;
+        console.log('next question: ', i == actions.length ? 'no more' : actions[i]);
+      })
+      .catch((err) => {
+        // error handling
+        console.log(err);
+      });
+    return;
   }
-  
-  // use reply API
-  return client.replyMessage(event.replyToken, { "type": "text", "text": "「エントリー」と送信してください" });
+
+  //   // check if we asked all the questions
+  //   if (i === actions.length) {
+  //     // we get the last message here
+  //     user.push(event.message.text);
+
+  //    }
+
+  //   if (registration_process_started) {
+  //     // increment the counter
+  //     if (event.message.text !== "register" || event.message.text !== "同意する") {
+  //       // add date to user table so we can send it later to database
+  //       user.push(event.message.text);
+  //     }
+
+  //     const reply = actions[i];
+
+  //     console.log(i, actions.length, user);
+  //     i++;
+  //     return client.replyMessage(event.replyToken, reply);
+  //   }
+
+  //   // use reply API
+  //   
 }
 
 // listen on port

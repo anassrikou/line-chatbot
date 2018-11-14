@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 // require('dotenv').config();
 
 const actions = require('./actions');
+const BOT = require('./bot');
 
 // create Express app
 // about Express itself: https://expressjs.com/
@@ -18,9 +19,10 @@ app.set('view engine', 'ejs');
 let i = 0; // actions counter
 let registration_process_started = false;
 const user = [];
+const source = {};
 
 // mongoose db connection
-mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds157843.mlab.com:57843/event`);
+mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds239682.mlab.com:39682/testreg`);
 
 const User = mongoose.model('User', {
   name: String,
@@ -83,92 +85,81 @@ function handleEvent(event) {
     // ignore non-text-message event
     return Promise.resolve(null);
   }
-  
 
-  if (event.message.text.trim() === "エントリー")
-    registration_process_started = true;
-  
+  if (source[event.source.userId] === undefined) {
+    source[event.source.userId] = new BOT(event.source.userId);
+  }
 
-  // registration process started
-  if (registration_process_started) {
-    // did we ask all the questions?
-    if (i === actions.length) {
-      user.push(event.message.text);
-      console.log(user);
+    if (event.message.text.trim() === "エントリー") {
+      source[event.source.userId].start();
+    }
+    // registration process started
+    if (source[event.source.userId].registration) {
+      // did we ask all the questions?
+      if (source[event.source.userId].i === actions.length) {
+        if (event.source.userId === source[event.source.userId].id)
+          source[event.source.userId].answers.push(event.message.text);
+        console.log(source[event.source.userId].answers);
 
-      const info = new User();
-      info.name = user[1];
-      info.university = user[2];
-      info.graduation_date = user[3];
-      info.email = user[4];
-      info.phone = user[5];
-      info.attend_date = user[7];
-      info.save().then(response => {
-        client.pushMessage(event.source.userId, { "type": "text", "text": "以上で終わりです！今後の流れは後ほど担当よりご連絡させていただきます。ご協力ありがとうございました。" })
-          .then(() => {
-            console.log('done');
-            user.length = 0; // reset the user info array
-          })
-          .catch((err) => {
-            // error handling
-            console.log(err);
+        source[event.source.userId].info = new User();
+        source[event.source.userId].info.name = source[event.source.userId].answers[1];
+        source[event.source.userId].info.university = source[event.source.userId].answers[2];
+        source[event.source.userId].info.graduation_date = source[event.source.userId].answers[3];
+        source[event.source.userId].info.email = source[event.source.userId].answers[4];
+        source[event.source.userId].info.phone = source[event.source.userId].answers[5];
+        source[event.source.userId].info.attend_date = source[event.source.userId].answers[7];
+        source[event.source.userId].info.save().then(response => {
+          client.pushMessage(event.source.userId, { "type": "text", "text": "以上で終わりです！今後の流れは後ほど担当よりご連絡させていただきます。ご協力ありがとうございました。" })
+            .then(() => {
+              console.log('done');
+              source[event.source.userId].reset(); // reset the user info array
+            })
+            .catch((err) => {
+              // error handling
+              console.log(err);
+            });
+          // reset everything
+          source[event.source.userId].reset();
+          // console.log(user);
+          // user.length = 0;
+        })
+          .catch(error => {
+            client.pushMessage(event.source.userId, { "type": "text", "text": "error saving, do the registration again" })
+              .then(() => {
+                console.log('done');
+                source[event.source.userId].reset(); // reset the user info array
+              })
+              .catch((err) => {
+                // error handling
+                console.log(err);
+              });
           });
-        // reset everything
-        i = 0;
-        console.log(user);
-        registration_process_started = false; // end registration
-        // user.length = 0;
-      })
-        .catch(error => {
-          console.log(error);
-        });
 
+        return;
+      }
+
+      const message = actions[source[event.source.userId].i];
+
+      client.pushMessage(event.source.userId, message)
+        .then(() => {
+          source[event.source.userId].answers.push(event.message.text);
+          source[event.source.userId].inc();
+          console.log(source[event.source.userId].i);
+        })
+        .catch((err) => {
+          // error handling
+          console.log(err);
+        });
       return;
     }
 
-    const message = actions[i];
-
-    client.pushMessage(event.source.userId, message)
-      .then(() => {
-        user.push(event.message.text);
-        i++;
-        console.log('next question: ', i == actions.length ? 'no more' : actions[i]);
-      })
-      .catch((err) => {
-        // error handling
-        console.log(err);
-      });
-    return;
-  }
   
-  return client.replyMessage(event.replyToken, { "type": "text", "text": "「エントリー」と送信してください" });
-  //   // check if we asked all the questions
-  //   if (i === actions.length) {
-  //     // we get the last message here
-  //     user.push(event.message.text);
+    return client.replyMessage(event.replyToken, { "type": "text", "text": "「エントリー」と送信してください" });
+    
+  }
 
-  //    }
-
-  //   if (registration_process_started) {
-  //     // increment the counter
-  //     if (event.message.text !== "register" || event.message.text !== "同意する") {
-  //       // add date to user table so we can send it later to database
-  //       user.push(event.message.text);
-  //     }
-
-  //     const reply = actions[i];
-
-  //     console.log(i, actions.length, user);
-  //     i++;
-  //     return client.replyMessage(event.replyToken, reply);
-  //   }
-
-  //   // use reply API
-  //   
-}
-
-// listen on port
-const port = process.env.PORT;
-app.listen(port, () => {
-  console.log(`listening on ${port}`);
-});
+  // listen on port
+  const port = process.env.PORT;
+  app.listen(port, () => {
+    console.log(`listening on ${port}`);
+  });

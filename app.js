@@ -20,9 +20,9 @@ let i = 0; // actions counter
 let registration_process_started = false;
 const user = [];
 const source = {};
-
+mongodb://<dbuser>:<dbpassword>@ds157843.mlab.com:57843/event
 // mongoose db connection
-mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds239682.mlab.com:39682/testreg`);
+mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds157843.mlab.com:57843/event`);
 
 const User = mongoose.model('User', {
   name: String,

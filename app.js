@@ -87,8 +87,7 @@ function handleEvent(event) {
 
   if (event.message.text.trim() === "エントリー")
     registration_process_started = true;
-  else
-    return client.replyMessage(event.replyToken, { "type": "text", "text": "「エントリー」と送信してください" });
+  
 
   // registration process started
   if (registration_process_started) {
@@ -141,7 +140,8 @@ function handleEvent(event) {
       });
     return;
   }
-
+  
+  return client.replyMessage(event.replyToken, { "type": "text", "text": "「エントリー」と送信してください" });
   //   // check if we asked all the questions
   //   if (i === actions.length) {
   //     // we get the last message here

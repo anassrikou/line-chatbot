@@ -14,31 +14,31 @@ module.exports = [
     "type": "template",
     "altText": "graduation date",
     "template": {
-        "type": "buttons",
-        "text": "ご登録ありがとうございます。初回登録にあたり卒業年度を下から選んでください。",
-        "title": "卒業年度の選択",
-        "actions": [
-            {
-              "type": "message",
-              "label":"2019年卒業",
-              "text":"2019年卒業"
-            },
-            {
-              "type": "message",
-              "label":"2020年卒業",
-              "text":"2020年卒業"
-            },
-            {
-              "type":"message",
-              "label":"2021年以降卒業",
-              "text":"2021年以降卒業"
-            },
-            {
-              "type":"message",
-              "label":"卒業済既卒",
-              "text":"卒業済既卒"
-            }
-        ]
+      "type": "buttons",
+      "text": "ご登録ありがとうございます。初回登録にあたり卒業年度を下から選んでください。",
+      "title": "卒業年度の選択",
+      "actions": [
+        {
+          "type": "message",
+          "label": "2019年卒業",
+          "text": "2019年卒業"
+        },
+        {
+          "type": "message",
+          "label": "2020年卒業",
+          "text": "2020年卒業"
+        },
+        {
+          "type": "message",
+          "label": "2021年以降卒業",
+          "text": "2021年以降卒業"
+        },
+        {
+          "type": "message",
+          "label": "卒業済既卒",
+          "text": "卒業済既卒"
+        }
+      ]
     }
   },
   // email
@@ -78,8 +78,8 @@ module.exports = [
   [
     // before plans
     {
-    type: "text",
-    text: "最後に参加したい日程を選択して下さい！\n(一律¥2,000/泊で前泊・延泊出来ます)\n"
+      type: "text",
+      text: "最後に参加したい日程を選択して下さい！\n(一律¥2,000/泊で前泊・延泊出来ます)\n"
     },
     // plans
     {
@@ -100,7 +100,7 @@ module.exports = [
               },
               {
                 "type": "message",
-                "label": "＋前泊\b",
+                "label": "＋前泊",
                 "text": "第3クール(前泊)"
               },
               {
@@ -191,6 +191,27 @@ module.exports = [
                 "type": "message",
                 "label": "＋延泊",
                 "text": "第７クール(延泊)"
+              }
+            ]
+          },
+          {
+            "title": "<参加クールが決まっていない場合>",
+            "text": "参加希望\"月\"のみ決まっている場合は「希望月」を、決まっていない場合は「未定」をお選びください。",
+            "actions": [
+              {
+                "type": "message",
+                "label": "11月",
+                "text": "11月"
+              },
+              {
+                "type": "message",
+                "label": "12月",
+                "text": "12月"
+              },
+              {
+                "type": "message",
+                "label": "決まっていない",
+                "text": "決まってない"
               }
             ]
           }

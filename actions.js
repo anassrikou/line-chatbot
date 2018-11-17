@@ -55,7 +55,7 @@ module.exports = [
     // agreement file
     {
       "type": "text",
-      "text": "https://files.fm/u/grqekbcb#/view/%E8%A6%8F%E7%B4%84.pdf"
+      "text": "https://goo.gl/qp7H2K"
     },
     // agreement
     {
@@ -79,7 +79,7 @@ module.exports = [
     // before plans
     {
       type: "text",
-      text: "最後に参加したい日程を選択して下さい！\n(一律¥2,000/泊で前泊・延泊出来ます)\n"
+      text: "最後に参加したい日程を選択して下さい！\n(火・水曜日の２日間分は無料です。追加の宿泊は一律¥2,000/泊でご利用できます。)"
     },
     // plans
     {
@@ -89,6 +89,27 @@ module.exports = [
         "type": "carousel",
         "actions": [],
         "columns": [
+          {
+            "title": "<参加クールが決まっていない場合>",
+            "text": "参加希望\"月\"のみ決まっている場合は「希望月」を、決まっていない場合は「未定」をお選びください。",
+            "actions": [
+              {
+                "type": "message",
+                "label": "11月",
+                "text": "11月"
+              },
+              {
+                "type": "message",
+                "label": "12月",
+                "text": "12月"
+              },
+              {
+                "type": "message",
+                "label": "決まっていない",
+                "text": "決まってない"
+              }
+            ]
+          },
           {
             "title": "<第３クール>",
             "text": "参加したいプランをお選びください",
@@ -191,27 +212,6 @@ module.exports = [
                 "type": "message",
                 "label": "＋延泊",
                 "text": "第７クール(延泊)"
-              }
-            ]
-          },
-          {
-            "title": "<参加クールが決まっていない場合>",
-            "text": "参加希望\"月\"のみ決まっている場合は「希望月」を、決まっていない場合は「未定」をお選びください。",
-            "actions": [
-              {
-                "type": "message",
-                "label": "11月",
-                "text": "11月"
-              },
-              {
-                "type": "message",
-                "label": "12月",
-                "text": "12月"
-              },
-              {
-                "type": "message",
-                "label": "決まっていない",
-                "text": "決まってない"
               }
             ]
           }

@@ -111,27 +111,6 @@ module.exports = [
             ]
           },
           {
-            "title": "<第３クール>",
-            "text": "参加したいプランをお選びください",
-            "actions": [
-              {
-                "type": "message",
-                "label": "11/20(火)~22(木)のみ",
-                "text": "第３クール"
-              },
-              {
-                "type": "message",
-                "label": "＋前泊",
-                "text": "第3クール(前泊)"
-              },
-              {
-                "type": "message",
-                "label": "＋延泊",
-                "text": "第３クール(延泊)"
-              }
-            ]
-          },
-          {
             "title": "<第４クール>",
             "text": "参加したいプランをお選びください",
             "actions": [

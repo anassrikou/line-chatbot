@@ -1,16 +1,16 @@
-module.exports = [
+module.exports = {
   // full name
-  {
+  name: {
     type: "text",
     text: "まずはじめにお名前を教えて下さい"
   },
   // name of university
-  {
+  university: {
     type: "text",
     text: "次に大学名、学部、学年を教えてください\n例)○○大学/○○学部/○年"
   },
   //date of graduation
-  {
+  graduation_date: {
     "type": "template",
     "altText": "graduation date",
     "template": {
@@ -42,16 +42,16 @@ module.exports = [
     }
   },
   // email
-  {
+  email: {
     type: "text",
     text: "これで半分終わりました！\n次にメールアドレスを教えて下さい"
   },
   // phone
-  {
+  phone: {
     type: "text",
     text: "次に電話番号を教えて下さい！"
   },
-  [
+  agreement: [
     // agreement file
     {
       "type": "text",
@@ -75,7 +75,7 @@ module.exports = [
       }
     }
   ],
-  [
+  attend_date: [
     // before plans
     {
       type: "text",
@@ -197,5 +197,25 @@ module.exports = [
         ]
       }
     }
-  ]
-]
+  ],
+  confirm: {
+    "type": "template",
+    "altText": "this is a confirm template",
+    "template": {
+      "type": "confirm",
+      "actions": [
+        {
+          "type": "message",
+          "label": "Yes",
+          "text": "Yes"
+        },
+        {
+          "type": "message",
+          "label": "No",
+          "text": "No"
+        }
+      ],
+      "text": "参加クールの選択は以上でよろしいですか？（「いいえ」を押すと追加で他のクールの選択をしていただけます。）"
+    }
+  }
+}

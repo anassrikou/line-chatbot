@@ -4,7 +4,7 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 const mongoose = require('mongoose');
 // const validator = require("email-validator");
-// const GoogleSpreadsheet = require('google-spreadsheet');
+const GoogleSpreadsheet = require('google-spreadsheet');
 // require('dotenv').config();
 
 const actions = require('./actions');

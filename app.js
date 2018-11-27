@@ -4,8 +4,8 @@ const line = require('@line/bot-sdk');
 const express = require('express');
 const mongoose = require('mongoose');
 // const validator = require("email-validator");
-const GoogleSpreadsheet = require('google-spreadsheet');
-require('dotenv').config();
+// const GoogleSpreadsheet = require('google-spreadsheet');
+// require('dotenv').config();
 
 const actions = require('./actions');
 const BOT = require('./bot');
@@ -156,75 +156,6 @@ function handleEvent(event) {
       console.log(err);
     });
   return;
-
-
-
-
-    //   if (event.message.text === "yes") {
-    //     source[userId].index = 6;
-    //     source[userId].has_multiple_events = true;
-    //   }
-    //   // did we ask all the questions?
-    //   if (source[userId].index === actions.length) {
-    //     if (userId === source[userId].id)
-    //       source[userId].answers.push(event.message.text);
-    //     console.log(source[userId].answers);
-
-    //     source[userId].info = new User();
-    //     source[userId].info.name = source[userId].answers[1];
-    //     source[userId].info.university = source[userId].answers[2];
-    //     source[userId].info.graduation_date = source[userId].answers[3];
-    //     source[userId].info.email = source[userId].answers[4];
-    //     source[userId].info.phone = source[userId].answers[5];
-    //     source[userId].info.attend_date = source[userId].push(answers[7]);
-    //     if (source[userId].has_multiple_events)
-    //       source[userId].info.attend_date = source[userId].push(answers[8]);
-
-    //     source[userId].info.save().then(response => {
-    //       client.pushMessage(userId, { "type": "text", "text": "以上で終わりです！今後の流れは後ほど担当よりご連絡させていただきます。ご協力ありがとうございました。" })
-    //         .then(() => {
-    //           console.log('done');
-    //           source[userId].reset(); // reset the user info array
-    //         })
-    //         .catch((err) => {
-    //           // error handling
-    //           console.log(err);
-    //         });
-    //       // reset everything
-    //       source[userId].reset();
-    //       // console.log(user);
-    //       // user.length = 0;
-    //     })
-    //       .catch(error => {
-    //         client.pushMessage(userId, { "type": "text", "text": "error saving, do the registration again" })
-    //           .then(() => {
-    //             console.log('done');
-    //             source[userId].reset(); // reset the user info array
-    //           })
-    //           .catch((err) => {
-    //             // error handling
-    //             console.log(err);
-    //           });
-    //       });
-
-    //     return;
-    //   }
-
-    //   const message = actions[source[userId].index];
-
-    //   client.pushMessage(userId, message)
-    //     .then(() => {
-    //       source[userId].answers.push(event.message.text);
-    //       source[userId].nextQuestion();
-    //       console.log(source[userId].index);
-    //     })
-    //     .catch((err) => {
-    //       // error handling
-    //       console.log(err);
-    //     });
-    //   return;
-
-
 
 }
 

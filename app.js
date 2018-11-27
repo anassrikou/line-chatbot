@@ -36,8 +36,8 @@ const source = {};
 const keys = ["name", "university", "graduation_date", "email", "phone", "attend_date", "confirm"];
 
 // mongoose db connection
-mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds239682.mlab.com:39682/testreg`, { useNewUrlParser: true });
-// mongodb://<dbuser>:<dbpassword>@ds239682.mlab.com:39682/testreg
+mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds157843.mlab.com:57843/event`, { useNewUrlParser: true });
+
 // create LINE SDK config from env variables
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,

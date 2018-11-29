@@ -90,27 +90,6 @@ module.exports = {
         "actions": [],
         "columns": [
           {
-            "title": "<参加クールが決まっていない場合>",
-            "text": "参加希望\"月\"のみ決まっている場合は「希望月」を、決まっていない場合は「未定」をお選びください。",
-            "actions": [
-              {
-                "type": "message",
-                "label": "11月",
-                "text": "11月"
-              },
-              {
-                "type": "message",
-                "label": "12月",
-                "text": "12月"
-              },
-              {
-                "type": "message",
-                "label": "決まっていない",
-                "text": "決まってない"
-              }
-            ]
-          },
-          {
             "title": "<第４クール>",
             "text": "参加したいプランをお選びください",
             "actions": [

@@ -3,27 +3,18 @@
 const line = require('@line/bot-sdk');
 const express = require('express');
 const mongoose = require('mongoose');
-// const validator = require("email-validator");
-const GoogleSpreadsheet = require('google-spreadsheet');
 // require('dotenv').config();
 
 const actions = require('./actions');
 const BOT = require('./bot');
 const User = require('./models/users');
 
-var creds = require('./credentials.json');
+// var creds = require('./client_secret.json');
 
 // Create a document object using the ID of the spreadsheet - obtained from its URL.
-var doc = new GoogleSpreadsheet('1lq3e2k78JfMC3XBpedUlZsW4AzVKGXymHACUxXKrHas');
 
 // Authenticate with the Google Spreadsheets API.
-doc.useServiceAccountAuth(creds, function (err) {
 
-  // Get all of the rows from the spreadsheet.
-  doc.getRows(1, function (err, rows) {
-    console.log('rows: ', rows);
-  });
-});
 
 // create Express app
 // about Express itself: https://expressjs.com/
@@ -36,8 +27,8 @@ const source = {};
 const keys = ["name", "university", "graduation_date", "email", "phone", "attend_date", "confirm"];
 
 // mongoose db connection
-mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds157843.mlab.com:57843/event`, { useNewUrlParser: true });
-
+mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@${process.env.DB_URL}`, { useNewUrlParser: true });
+// mongodb://<dbuser>:<dbpassword>@ds157843.mlab.com:57843/event
 // create LINE SDK config from env variables
 const config = {
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
@@ -85,8 +76,16 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
+function resetQuestions(event) {
+  console.log('no more questions')
+    source[event.source.userId].reset();
+    return client.replyMessage(event.replyToken, { "type": "text", "text": "以上で終わりです！今後の流れは後ほど担当よりご連絡させていただきます。ご協力ありがとうございました。" });
+}
+
 // event handler
 function handleEvent(event) {
+
+  console.log('\n --------------------- \n event data \n ', event, '\n ------------------------- \n');
 
   const userId = event.source.userId;
 
@@ -95,9 +94,7 @@ function handleEvent(event) {
     return Promise.resolve(null);
   }
 
-  //get the user message
-  console.log('user msg',event.message.text);
-  
+  //get the user message  
   const user_input = event.message.text;
   
   // new user adding the bot to chat list will get added to the source list with an instance of bot for him
@@ -105,57 +102,89 @@ function handleEvent(event) {
     source[userId] = new BOT(userId);
   }
 
-  if (source[userId].info === null)
+  // first time users will get a new instance of the user model
+  if (source[userId].info === null) {
     source[userId].info = new User();
+  }
   
-  console.log('current i', source[userId].index);
+  console.log('current i and key', source[userId].index, keys[source[userId].index]);
 
   if (event.message.text.trim() === "エントリー") {
     source[userId].startRegistrationProcess();
+    return client.replyMessage(event.replyToken, {
+      "type": "text",
+      "text": "まずはじめにお名前を教えて下さい"
+    });
   }
   // registration process ended or not started
   if (!source[userId].registration) {
     return client.replyMessage(event.replyToken, { "type": "text", "text": "「エントリー」と送信してください" });
   }
 
-  // here we process the user input and add their response to our database
-  let index = source[userId].index;
-
-  // if (keys[index-1] === 'no') { // user wants to add another date
-  //   user[userId].backToAttendDate();
-  // }
-  
-  if (keys[index] === undefined) {
+  if (keys[source[userId].index] === undefined) {
     // no more questions to ask 
-    console.log('no more questions')
-    source[userId].reset();
-    return client.replyMessage(event.replyToken, { "type": "text", "text": "以上で終わりです！今後の流れは後ほど担当よりご連絡させていただきます。ご協力ありがとうございました。" });
+    resetQuestions(event);
   }
+  const key = keys[source[userId].index];
+  const update = {}; 
+  update[key] = user_input;
+  console.log('update field', update);
+  source[userId].answers[key] = user_input;
 
+  if (source[userId].has_multiple_events) {
+    if (user_input === "はい") { // user doesnt wants to add another event date
+      return resetQuestions(event);
+    }
+    else if (user_input === "いいえ") { // user wants to add another event date
+      source[userId].backToAttendDate();
+      const message = actions[keys[source[userId].index]];
+      return client.replyMessage(event.replyToken, message);
+    }
+    else {
+      if (keys[source[userId].index] === "attend_date") {
+        console.log('reached attend date');
+        
+        User.findOneAndUpdate({ lineId: userId }, { $push: {'attend_date': user_input }})
+        .then(result => console.log('result of save date', result))
+        .catch(error => console.log(error));
+        source[userId].nextQuestion();
+        const message = actions[keys[source[userId].index]];
+        if (!message)
+        return resetQuestions(event);
+        
+        return client.replyMessage(event.replyToken, message); 
+      }
+    }
+  } else {
 
-  source[userId].info[keys[index-1]] = user_input;
-  console.log('user info', source[userId].info);
-  User.findOneAndUpdate({ lineId: userId }, source[userId].info, { new: true, upsert: true })
-    .then((result) => {
-      console.log('result', result);
-    })
-    .catch(error => {
-      console.log(error);
-    });
-
-  // registration logic here
-  const message = actions[keys[index]];
-
-  client.pushMessage(userId, message)
-    .then(() => {
-      source[userId].answers.push(event.message.text);
-      source[userId].nextQuestion();
-    })
-    .catch((err) => {
-      // error handling
-      console.log(err);
-    });
-  return;
+    if (user_input === "いいえ") { // user wants to add another event date
+      source[userId].backToAttendDate();
+      const message = actions[keys[source[userId].index]];
+      return client.replyMessage(event.replyToken, message);
+    }
+  
+   
+  
+    User.findOneAndUpdate({ lineId: userId }, update, { new: true, upsert: true })
+      .then((result) => {
+        console.log('---------------------------')
+        console.log('result', result);
+         // registration logic here
+         console.log('current key ', keys[source[userId].index]);
+         source[userId].nextQuestion();
+         const message = actions[keys[source[userId].index]];
+         if (!message)
+          return resetQuestions(event);
+  
+        return client.replyMessage(event.replyToken, message);
+        
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  
+  }
+  
 
 }
 

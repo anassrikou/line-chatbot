@@ -6,7 +6,7 @@ module.exports = class BOT {
     this.id = userId;
     this.index = 0;
     this.registration = false;
-    this.answers = [];
+    this.answers = {};
     this.info = null;
     this.has_multiple_events = false;
   }
@@ -20,6 +20,7 @@ module.exports = class BOT {
   }
 
   backToAttendDate() {
+    this.has_multiple_events = true;
     this.index = 5;
   }
 

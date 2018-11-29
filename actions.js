@@ -1,9 +1,9 @@
 module.exports = {
   // full name
-  name: {
-    type: "text",
-    text: "まずはじめにお名前を教えて下さい"
-  },
+  // name: {
+  //   type: "text",
+  //   text: "まずはじめにお名前を教えて下さい"
+  // },
   // name of university
   university: {
     type: "text",
@@ -207,12 +207,12 @@ module.exports = {
         {
           "type": "message",
           "label": "Yes",
-          "text": "Yes"
+          "text": "はい"
         },
         {
           "type": "message",
           "label": "No",
-          "text": "No"
+          "text": "いいえ"
         }
       ],
       "text": "参加クールの選択は以上でよろしいですか？（「いいえ」を押すと追加で他のクールの選択をしていただけます。）"

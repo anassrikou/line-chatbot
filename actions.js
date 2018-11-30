@@ -55,7 +55,7 @@ module.exports = {
     // agreement file
     {
       "type": "text",
-      "text": "https://goo.gl/qp7H2K"
+      "text": "https://t2m.io/7ZYWX931"
     },
     // agreement
     {
@@ -90,48 +90,6 @@ module.exports = {
         "actions": [],
         "columns": [
           {
-            "title": "<第４クール>",
-            "text": "参加したいプランをお選びください",
-            "actions": [
-              {
-                "type": "message",
-                "label": "11/27(火)~29(木)のみ",
-                "text": "第４クール"
-              },
-              {
-                "type": "message",
-                "label": "＋前泊",
-                "text": "第４クール(前泊)"
-              },
-              {
-                "type": "message",
-                "label": "＋延泊",
-                "text": "第４クール(延泊)"
-              }
-            ]
-          },
-          {
-            "title": "<第５クール>",
-            "text": "参加したいプランをお選びください",
-            "actions": [
-              {
-                "type": "message",
-                "label": "12/4(火)~6(木)のみ",
-                "text": "第５クール"
-              },
-              {
-                "type": "message",
-                "label": "＋前泊",
-                "text": "第５クール(前泊)"
-              },
-              {
-                "type": "message",
-                "label": "＋延泊",
-                "text": "第５クール(延泊)"
-              }
-            ]
-          },
-          {
             "title": "<第６クール>",
             "text": "参加したいプランをお選びください",
             "actions": [
@@ -142,7 +100,7 @@ module.exports = {
               },
               {
                 "type": "message",
-                "label": "＋前泊",
+                "label": "＋前泊\b",
                 "text": "第６クール(前泊)"
               },
               {
@@ -163,13 +121,97 @@ module.exports = {
               },
               {
                 "type": "message",
-                "label": "＋前泊",
+                "label": "＋前泊\b",
                 "text": "第７クール(前泊)"
               },
               {
                 "type": "message",
                 "label": "＋延泊",
                 "text": "第７クール(延泊)"
+              }
+            ]
+          },
+          {
+            "title": "<第８クール>",
+            "text": "参加したいプランをお選びください",
+            "actions": [
+              {
+                "type": "message",
+                "label": "1/8(火)~10(木)のみ",
+                "text": "第８クール"
+              },
+              {
+                "type": "message",
+                "label": "＋前泊\b",
+                "text": "第８クール(前泊)"
+              },
+              {
+                "type": "message",
+                "label": "＋延泊",
+                "text": "第８クール(延泊)"
+              }
+            ]
+          },
+          {
+            "title": "<第９クール>",
+            "text": "参加したいプランをお選びください",
+            "actions": [
+              {
+                "type": "message",
+                "label": "1/15(火)~17(木)のみ",
+                "text": "第９クール"
+              },
+              {
+                "type": "message",
+                "label": "＋前泊\b",
+                "text": "第９クール(前泊)"
+              },
+              {
+                "type": "message",
+                "label": "＋延泊",
+                "text": "第９クール(延泊)"
+              }
+            ]
+          },
+          {
+            "title": "<第１０クール>",
+            "text": "参加したいプランをお選びください",
+            "actions": [
+              {
+                "type": "message",
+                "label": "1/22(火)~24(木)のみ",
+                "text": "第１０クール"
+              },
+              {
+                "type": "message",
+                "label": "＋前泊\b",
+                "text": "第１０クール(前泊)"
+              },
+              {
+                "type": "message",
+                "label": "＋延泊",
+                "text": "第１０クール(延泊)"
+              }
+            ]
+          },
+          {
+            "title": "<第１１クール>",
+            "text": "参加したいプランをお選びください",
+            "actions": [
+              {
+                "type": "message",
+                "label": "1/29(火)~31(木)のみ",
+                "text": "第１１クール"
+              },
+              {
+                "type": "message",
+                "label": "＋前泊\b",
+                "text": "第１１クール(前泊)"
+              },
+              {
+                "type": "message",
+                "label": "＋延泊",
+                "text": "第１１クール(延泊)"
               }
             ]
           }
@@ -185,12 +227,12 @@ module.exports = {
       "actions": [
         {
           "type": "message",
-          "label": "Yes",
+          "label": "はい",
           "text": "はい"
         },
         {
           "type": "message",
-          "label": "No",
+          "label": "いいえ",
           "text": "いいえ"
         }
       ],

@@ -9,6 +9,7 @@ module.exports = class BOT {
     this.answers = {};
     this.info = null;
     this.has_multiple_events = false;
+    this.user_last_message_time = 0;
   }
 
   nextQuestion() {
@@ -19,7 +20,7 @@ module.exports = class BOT {
     this.registration = true;
   }
 
-  backToAttendDate() {
+  goToAttendDate() {
     this.has_multiple_events = true;
     this.index = 5;
   }
@@ -28,5 +29,6 @@ module.exports = class BOT {
     this.index = 0;
     this.registration = false;
     this.answers.length = 0;
+    this.has_multiple_events = false;
   }
 }

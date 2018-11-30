@@ -22,48 +22,35 @@
         <th>email</th>
         <th>phone</th>
         <th>attend_date</th>
-        <th>option</th>
       </tr>
     </thead>
     <tbody>
       <% users.forEach(function(user){ %>
         <% if (!user.hidden) { %>
           <tr <% if (user.confirmed) { %> class="confirmed" <% } %> >
-            <td><%= user.name %></td>
+            <td><%= user.name %>
             <td><%= user.university %></td>
             <td><%= user.graduation_date %></td>
             <td><%= user.email %></td>
             <td><%= user.phone %></td>
-            <td><%= user.attend_date %></td>
-            <td><button id="confirm" data-id="<%= user._id %>" class="btn btn-success">confirm</button><button id="hide" data-id="<%= user._id %>" class="btn btn-error">hide</button></td>
+            <td>
+            <% user.attend_date.forEach(function(date) { %>
+               <%= date %> |
+            <% }); %>
+            </td>
           </tr>
         <% } %>
       <% }); %>
     </tbody>
   </table>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script
+			  src="https://code.jquery.com/jquery-3.3.1.min.js"
+			  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			  crossorigin="anonymous"></script>
+  <script src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.0.5/js/tableexport.min.js"></script>
   <script>
-    const confirm_button = document.querySelectorAll("#confirm");
-    const hide_button = document.querySelectorAll("#hide");
-
-    confirm_button.forEach(btn => btn.addEventListener('click', handleConfirmation));
-    hide_button.forEach(btn=> btn.addEventListener('click', handleHide));
-
-    function handleConfirmation(e) {
-      const tr = this.parentElement.parentElement;
-      const id = this.dataset.id;
-      axios.post(`/confirm/${id}`)
-        .then(response => tr.classList.add('confirmed'))
-        .catch(error => console.log(error));
-    }
-
-    function handleHide(e) {
-      const tr = this.parentElement.parentElement;
-      const id = this.dataset.id;
-      axios.post(`/hide/${id}`)
-        .then(response => tr.remove())
-        .catch(error => console.log(error));
-    }
+  $("table").tableExport();
   </script>
 </body>
 </html>
